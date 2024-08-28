@@ -6,6 +6,10 @@ const {
   getArticleByArticleId,
   getArticles,
 } = require("./controllers/articles.controller.js");
+const {
+  postComments,
+  getComments,
+} = require("./controllers/comments.controller.js");
 
 app.use(express.json());
 
@@ -13,11 +17,24 @@ app.get("/api/topics", getAllTopics);
 app.get("/api", getApis);
 app.get("/api/articles/:article_id", getArticleByArticleId);
 app.get("/api/articles", getArticles);
+app.get("/api/articles/:article_id/comments", getComments);
+app.post("/api/articles/:article_id/comments", postComments);
+
+app.all("/*", (req, res) => {
+  res.status(404).send({ msg: "Page not found" });
+});
 
 app.use((req, res, next) => {
+  if (error.code === "22PO2") {
+    res.status(400).send({ msg: "Invalid ID" });
+  }
   res.status(404).send({ msg: "URL not found" });
 });
 
-//app.all
+app.use((req, res, next) => {
+  if (err.code === "23503") {
+    res.status(404).send({ msg: "not found" });
+  }
+});
 
 module.exports = app;

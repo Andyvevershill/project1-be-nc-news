@@ -31,7 +31,7 @@ describe("/api", () => {
       .get("/apparel")
       .expect(404)
       .then((res) => {
-        expect(res.body.msg).toBe("URL not found");
+        expect(res.body.msg).toBe(" Page not found");
       });
   });
 });
