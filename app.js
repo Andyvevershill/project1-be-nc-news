@@ -5,6 +5,7 @@ const getApis = require("./controllers/apis.controller.js");
 const {
   getArticleByArticleId,
   getArticles,
+  changeArticleVotes,
 } = require("./controllers/articles.controller.js");
 const {
   postComments,
@@ -19,6 +20,7 @@ app.get("/api/articles/:article_id", getArticleByArticleId);
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id/comments", getComments);
 app.post("/api/articles/:article_id/comments", postComments);
+app.patch("/api/articles/:article_id", changeArticleVotes);
 
 app.all("/*", (req, res) => {
   res.status(404).send({ msg: "Page not found" });

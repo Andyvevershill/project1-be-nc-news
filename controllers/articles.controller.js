@@ -1,4 +1,8 @@
-const { getArticle, getAllArticles } = require("../models/articles.model");
+const {
+  getArticle,
+  getAllArticles,
+  updateArticleVotes,
+} = require("../models/articles.model");
 
 const getArticleByArticleId = (req, res, next) => {
   const { article_id } = req.params;
@@ -24,4 +28,24 @@ const getArticles = (req, res, next) => {
     });
 };
 
-module.exports = { getArticleByArticleId, getArticles };
+const changeArticleVotes = (req, res, next) => {
+  const { article_id } = req.params;
+  const { inc_votes } = req.body;
+
+  if (!inc_votes || typeof inc_votes !== "number") {
+    return res.status(400).send({ msg: "Bad Request" });
+  }
+
+  updateArticleVotes(article_id, inc_votes)
+    .then((article) => {
+      if (!article) {
+        return res.status(404).send({ msg: "Article not found" });
+      }
+      res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+module.exports = { getArticleByArticleId, getArticles, changeArticleVotes };
