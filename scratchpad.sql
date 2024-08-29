@@ -1,0 +1,1 @@
+SELECT * FROM nc_news_test;
