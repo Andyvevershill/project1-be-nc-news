@@ -20,9 +20,7 @@ describe("/api", () => {
         const endpoints = res.body.apis;
         expect(endpoints).toHaveProperty("GET /api");
         expect(endpoints).toHaveProperty("GET /api/articles");
-        // expect(endpoints).toHaveProperty("GET /api/comments");
         expect(endpoints).toHaveProperty("GET /api/topics");
-        // expect(endpoints).toHaveProperty("GET /api/users");
         expect(endpoints).toHaveProperty("GET /api");
       });
   });
