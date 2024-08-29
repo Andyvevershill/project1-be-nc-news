@@ -39,5 +39,31 @@
       "votes": 100,
       "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
     }
+  },
+  "GET /api/articles ordered by age": {
+    "description": "serves an array of all articles ordered by age in descending order",
+    "queries": ["author", "topic", "sort_by", "order"],
+    "exampleResponse": [
+      {
+        "author": "jessjelly",
+        "title": "Living in the shadow of a great man",
+        "article_id": 1,
+        "topic": "mitch",
+        "created_at": "2020-07-09T20:11:00.000Z",
+        "votes": 100,
+        "article_img_url": "https://example.com/img1.jpg",
+        "comment_count": 13
+      },
+      {
+        "author": "grumpy19",
+        "title": "Sony Vaio; or, The Laptop",
+        "article_id": 2,
+        "topic": "technology",
+        "created_at": "2020-06-15T14:20:00.000Z",
+        "votes": 50,
+        "article_img_url": "https://example.com/img2.jpg",
+        "comment_count": 0
+      }
+    ]
   }
 }
