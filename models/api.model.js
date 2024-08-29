@@ -4,7 +4,6 @@ const selectApis = () => {
   return promises
     .readFile("./endpoints.json", "utf-8")
     .then((endpoints) => {
-      console.log(endpoints);
       return JSON.parse(endpoints);
     })
     .catch((err) => {

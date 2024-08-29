@@ -74,6 +74,3 @@ describe("/api/articles", () => {
       });
   });
 });
-
-//try and think of some more error tests
-//then make sure you have made a branch and push up correctly
