@@ -39,6 +39,44 @@ describe("/api/articles/:article_id", () => {
         expect(res.body.msg).toBe("Article not found");
       });
   });
+  it("200 - returns an updated article that has been changed by the value of newVote", () => {
+    const newVotes = { inc_votes: 50 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(newVotes)
+      .expect(200)
+      .then((res) => {
+        const { article } = res.body;
+        expect(article.votes).toBe(150);
+      });
+  });
+  test("400 - responds with an error when inc_votes is missing", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({})
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad Request");
+      });
+  });
+  test("400 - responds with an error when inc_votes is not a number", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: "one" })
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad Request");
+      });
+  });
+  test("404 - responds with an error when article_id does not exist", () => {
+    return request(app)
+      .patch("/api/articles/9999")
+      .send({ inc_votes: 1 })
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Article not found");
+      });
+  });
 });
 
 describe("/api/articles", () => {
@@ -63,13 +101,12 @@ describe("/api/articles", () => {
         });
       });
   });
-  it("will default the comment_count to 0 if there is no mention of the article_id", () => {
+  it("will default the comment_count to 0 if there is no mention of the article", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
       .then((res) => {
         const { articles } = res.body;
-        console.log(articles[3].comment_count);
         expect(Number(articles[3].comment_count)).toEqual(0);
       });
   });
