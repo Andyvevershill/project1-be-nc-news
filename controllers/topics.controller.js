@@ -1,4 +1,4 @@
-const topicsData = require("../models/models");
+const topicsData = require("../models/topics.model");
 
 const getAllTopics = (req, res, next) => {
   topicsData()
@@ -6,7 +6,6 @@ const getAllTopics = (req, res, next) => {
       res.status(200).send({ topics });
     })
     .catch((err) => {
-      console.log(err);
       next(err);
     });
 };
