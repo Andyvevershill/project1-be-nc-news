@@ -66,7 +66,7 @@
       }
     ]
   },
-  "GET /api/articles/:article_id/comments": {
+  "POST /api/articles/:article_id/comments": {
     "description": "add a new comment to an article",
     "queries": [],
     "exampleResponse": [
@@ -93,5 +93,10 @@
         "created_at": 1586179020000
       }
     ]
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes a comment based on the comment_id",
+    "queries": [],
+    "exampleResponse": {}
   }
 }

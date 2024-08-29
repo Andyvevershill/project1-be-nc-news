@@ -68,3 +68,17 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("/api/comments/:comment_id", () => {
+  it("204 - successfully deletes the comment requested by comment_id", () => {
+    return request(app).delete("/api/comments/1").expect(204);
+  });
+  test("404 - responds with an error when comment_id does not exist", () => {
+    return request(app)
+      .delete("/api/comments/9999")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Comment not found");
+      });
+  });
+});
