@@ -2,15 +2,19 @@ const express = require("express");
 const app = express();
 const getAllTopics = require("./controllers/topics.controller.js");
 const getApis = require("./controllers/apis.controller.js");
+
 const {
   getArticleByArticleId,
   getArticles,
   changeArticleVotes,
 } = require("./controllers/articles.controller.js");
+
 const {
   postComments,
   getComments,
 } = require("./controllers/comments.controller.js");
+
+const getUsers = require("./controllers/users.controller.js");
 
 app.use(express.json());
 
@@ -21,8 +25,9 @@ app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id/comments", getComments);
 app.post("/api/articles/:article_id/comments", postComments);
 app.patch("/api/articles/:article_id", changeArticleVotes);
+app.get("/api/users", getUsers);
 
-app.all("/*", (req, res) => {
+app.all("/*", (req, res, next) => {
   res.status(404).send({ msg: "Page not found" });
 });
 
