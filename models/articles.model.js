@@ -8,10 +8,26 @@ const getArticle = (article_id) => {
     });
 };
 
-const getAllArticles = () => {
-  return db
-    .query(
-      `SELECT
+const getAllArticles = (sort_by = "created_at", order = "desc") => {
+  const validSortValues = [
+    "article_id",
+    "author",
+    "topic",
+    "created_at",
+    "votes",
+    "title",
+    "comment_count",
+  ];
+  const validOrders = ["asc", "desc"];
+
+  if (!validSortValues.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "Invalid sort_by" });
+  }
+  if (!validOrders.includes(order)) {
+    return Promise.reject({ status: 400, msg: "Invalid order" });
+  }
+
+  const query = `SELECT
     articles.article_id,
     articles.author,
     articles.topic,
@@ -23,11 +39,11 @@ const getAllArticles = () => {
     FROM articles
     LEFT JOIN comments ON articles.article_id = comments.article_id
     GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC`
-    )
-    .then(({ rows }) => {
-      return rows;
-    });
+    ORDER BY ${sort_by} ${order}`;
+
+  return db.query(query).then(({ rows }) => {
+    return rows;
+  });
 };
 
 const updateArticleVotes = (article_id, inc_votes) => {

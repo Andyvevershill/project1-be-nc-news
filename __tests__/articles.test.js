@@ -3,6 +3,7 @@ const app = require("../app.js");
 const db = require("../db/connection.js");
 const seed = require("../db/seeds/seed.js");
 const data = require("../db/data/test-data/index.js");
+require("jest-sorted");
 
 beforeAll(() => {
   return seed(data);
@@ -101,6 +102,15 @@ describe("/api/articles", () => {
         });
       });
   });
+  it("allows sorting articles by a valid column (votes)", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes")
+      .expect(200)
+      .then((res) => {
+        const { articles } = res.body;
+        expect(articles).toBeSortedBy("votes", { descending: true });
+      });
+  });
   it("will default the comment_count to 0 if there is no mention of the article", () => {
     return request(app)
       .get("/api/articles")
@@ -108,6 +118,22 @@ describe("/api/articles", () => {
       .then((res) => {
         const { articles } = res.body;
         expect(Number(articles[3].comment_count)).toEqual(0);
+      });
+  });
+  it("responds with an error when trying to sort by an invalid input", () => {
+    return request(app)
+      .get("/api/articles?sort_by=NOTATHING")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Invalid sort_by");
+      });
+  });
+  it("responds with an arror when trying to order by an invalid order", () => {
+    return request(app)
+      .get("/api/articles?order=uptodown")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Invalid order");
       });
   });
 });
