@@ -82,7 +82,7 @@ describe("/api/articles/:article_id", () => {
 });
 
 describe("/api/articles", () => {
-  it("will return an array of article objects with the body property being replaced by a comment_count and sorted by date in descending order", () => {
+  it("200 - will return an array of article objects with the body property being replaced by a comment_count and sorted by date in descending order", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
@@ -103,7 +103,7 @@ describe("/api/articles", () => {
         });
       });
   });
-  it("allows sorting articles by a valid column (votes)", () => {
+  it("200 - allows sorting articles by a valid column (votes)", () => {
     return request(app)
       .get("/api/articles?sort_by=votes")
       .expect(200)
@@ -112,7 +112,7 @@ describe("/api/articles", () => {
         expect(articles).toBeSortedBy("votes", { descending: true });
       });
   });
-  it("will default the comment_count to 0 if there is no mention of the article", () => {
+  it("200 - will default the comment_count to 0 if there is no mention of the article", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
@@ -121,7 +121,7 @@ describe("/api/articles", () => {
         expect(Number(articles[3].comment_count)).toEqual(0);
       });
   });
-  it("returns articles filtered by topic", () => {
+  it("200 - returns articles filtered by topic", () => {
     return request(app)
       .get("/api/articles?topic=mitch")
       .expect(200)
@@ -133,7 +133,7 @@ describe("/api/articles", () => {
         });
       });
   });
-  it("returns all articles if topic is omitted", () => {
+  it("200 - returns all articles if topic is omitted", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
@@ -142,7 +142,7 @@ describe("/api/articles", () => {
         expect(articles.length).toBeGreaterThan(0);
       });
   });
-  it("responds with an error when trying to sort by an invalid input", () => {
+  it("400 - responds with an error when trying to sort by an invalid input", () => {
     return request(app)
       .get("/api/articles?sort_by=NOTATHING")
       .expect(400)
@@ -150,7 +150,7 @@ describe("/api/articles", () => {
         expect(res.body.msg).toBe("Invalid sort_by");
       });
   });
-  it("responds with an arror when trying to order by an invalid order", () => {
+  it("400 - responds with an arror when trying to order by an invalid order", () => {
     return request(app)
       .get("/api/articles?order=uptodown")
       .expect(400)
@@ -158,7 +158,7 @@ describe("/api/articles", () => {
         expect(res.body.msg).toBe("Invalid order");
       });
   });
-  it("responds with an error when sort_by is invalid", () => {
+  it("400 - responds with an error when sort_by is invalid", () => {
     return request(app)
       .get("/api/articles?sort_by=invalid")
       .expect(400)

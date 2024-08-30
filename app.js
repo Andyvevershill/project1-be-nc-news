@@ -15,7 +15,7 @@ const {
   deleteComment,
 } = require("./controllers/comments.controller.js");
 
-const getUsers = require("./controllers/users.controller.js");
+const { getUsers, getUsername } = require("./controllers/users.controller.js");
 
 app.use(express.json());
 
@@ -28,6 +28,7 @@ app.post("/api/articles/:article_id/comments", postComments);
 app.patch("/api/articles/:article_id", changeArticleVotes);
 app.delete("/api/comments/:comment_id", deleteComment);
 app.get("/api/users", getUsers);
+app.get("/api/users/:username", getUsername);
 
 app.all("/*", (req, res, next) => {
   res.status(404).send({ msg: "Page not found" });
