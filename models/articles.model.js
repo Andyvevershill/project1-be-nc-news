@@ -2,9 +2,23 @@ const db = require("../db/connection");
 
 const getArticle = (article_id) => {
   return db
-    .query("SELECT * FROM articles WHERE article_id = $1", [article_id])
+    .query(
+      `SELECT articles.*,
+      COALESCE(COUNT(comments.article_id), 0) AS comment_count
+      FROM articles
+      LEFT JOIN comments ON articles.article_id = comments.article_id
+      WHERE articles.article_id = $1
+      GROUP BY articles.article_id;`,
+      [article_id]
+    )
     .then(({ rows }) => {
-      return rows;
+      if (rows.length === 0) {
+        const err = new Error("does not exist");
+        console.error(err.message);
+        throw err;
+      }
+      rows[0].comment_count = Number(rows[0].comment_count);
+      return rows[0];
     });
 };
 
@@ -50,7 +64,7 @@ const getAllArticles = (
   }
 
   queryStr += ` GROUP BY articles.article_id
-    ORDER BY ${sort_by} ${order};`;
+    ORDER BY ${sort_by} ${order}`;
 
   return db.query(queryStr, queryParams).then(({ rows }) => {
     return rows;

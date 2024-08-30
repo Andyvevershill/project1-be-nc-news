@@ -19,7 +19,7 @@ describe("/api/articles/:article_id", () => {
       .expect(200)
       .then((res) => {
         const article = res.body.article;
-        expect(Object.keys(article).length).toBe(8);
+        expect(Object.keys(article).length).toBe(9);
         expect(article.article_id).toBe(1);
         expect(article.title).toBe("Living in the shadow of a great man");
         expect(article.topic).toBe("mitch");
@@ -30,6 +30,7 @@ describe("/api/articles/:article_id", () => {
         expect(article.article_img_url).toBe(
           "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
         );
+        expect(article).toHaveProperty("comment_count", expect.any(Number));
       });
   });
   it("404 - responds with an appropriate error when article_id does not exist", () => {
