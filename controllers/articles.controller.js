@@ -12,9 +12,6 @@ const getArticleByArticleId = (req, res, next) => {
     })
 
     .catch((err) => {
-      if (err.message === "does not exist") {
-        return res.status(404).send({ msg: "Article not found" });
-      }
       next(err);
     });
 };

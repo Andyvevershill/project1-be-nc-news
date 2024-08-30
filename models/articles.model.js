@@ -13,9 +13,7 @@ const getArticle = (article_id) => {
     )
     .then(({ rows }) => {
       if (rows.length === 0) {
-        const err = new Error("does not exist");
-        console.error(err.message);
-        throw err;
+        return Promise.reject({ status: 404, msg: "Article not found" });
       }
       rows[0].comment_count = Number(rows[0].comment_count);
       return rows[0];
