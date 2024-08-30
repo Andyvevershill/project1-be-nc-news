@@ -12,6 +12,7 @@ const {
 const {
   postComments,
   getComments,
+  deleteComment,
 } = require("./controllers/comments.controller.js");
 
 const getUsers = require("./controllers/users.controller.js");
@@ -25,6 +26,7 @@ app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id/comments", getComments);
 app.post("/api/articles/:article_id/comments", postComments);
 app.patch("/api/articles/:article_id", changeArticleVotes);
+app.delete("/api/comments/:comment_id", deleteComment);
 app.get("/api/users", getUsers);
 
 app.all("/*", (req, res, next) => {
