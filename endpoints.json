@@ -40,7 +40,7 @@
       "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
     }
   },
-  "GET /api/articles ordered by age": {
+  "GET /api/articles ordered by age in DESC": {
     "description": "serves an array of all articles ordered by age in descending order",
     "queries": ["author", "topic", "sort_by", "order"],
     "exampleResponse": [

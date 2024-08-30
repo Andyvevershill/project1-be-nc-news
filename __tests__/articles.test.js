@@ -120,6 +120,27 @@ describe("/api/articles", () => {
         expect(Number(articles[3].comment_count)).toEqual(0);
       });
   });
+  it("returns articles filtered by topic", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then((res) => {
+        const { articles } = res.body;
+        expect(articles.length).toBeGreaterThan(0);
+        articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
+  it("returns all articles if topic is omitted", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((res) => {
+        const { articles } = res.body;
+        expect(articles.length).toBeGreaterThan(0);
+      });
+  });
   it("responds with an error when trying to sort by an invalid input", () => {
     return request(app)
       .get("/api/articles?sort_by=NOTATHING")
@@ -134,6 +155,14 @@ describe("/api/articles", () => {
       .expect(400)
       .then((res) => {
         expect(res.body.msg).toBe("Invalid order");
+      });
+  });
+  it("responds with an error when sort_by is invalid", () => {
+    return request(app)
+      .get("/api/articles?sort_by=invalid")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Invalid sort_by");
       });
   });
 });
