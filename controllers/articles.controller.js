@@ -8,18 +8,18 @@ const getArticleByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   getArticle(article_id)
     .then((article) => {
-      if (article.length === 0) {
-        return res.status(404).send({ msg: "Article not found" });
-      }
-      res.status(200).send({ article: article[0] });
+      res.status(200).send({ article: article });
     })
+
     .catch((err) => {
       next(err);
     });
 };
 
 const getArticles = (req, res, next) => {
-  getAllArticles()
+  const { sort_by, order, topic } = req.query;
+
+  getAllArticles(sort_by, order, topic)
     .then((articles) => {
       res.status(200).send({ articles });
     })

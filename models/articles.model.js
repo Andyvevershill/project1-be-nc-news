@@ -2,16 +2,49 @@ const db = require("../db/connection");
 
 const getArticle = (article_id) => {
   return db
-    .query("SELECT * FROM articles WHERE article_id = $1", [article_id])
+    .query(
+      `SELECT articles.*,
+      COALESCE(COUNT(comments.article_id), 0) AS comment_count
+      FROM articles
+      LEFT JOIN comments ON articles.article_id = comments.article_id
+      WHERE articles.article_id = $1
+      GROUP BY articles.article_id;`,
+      [article_id]
+    )
     .then(({ rows }) => {
-      return rows;
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Article not found" });
+      }
+      rows[0].comment_count = Number(rows[0].comment_count);
+      return rows[0];
     });
 };
 
-const getAllArticles = () => {
-  return db
-    .query(
-      `SELECT
+const getAllArticles = (
+  sort_by = "created_at",
+  order = "desc",
+  topic = null
+) => {
+  const validSortValues = [
+    "article_id",
+    "author",
+    "topic",
+    "created_at",
+    "votes",
+    "title",
+    "comment_count",
+  ];
+  const validOrders = ["asc", "desc"];
+
+  if (!validSortValues.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "Invalid sort_by" });
+  }
+  if (!validOrders.includes(order)) {
+    return Promise.reject({ status: 400, msg: "Invalid order" });
+  }
+  const queryParams = [];
+
+  let queryStr = `SELECT
     articles.article_id,
     articles.author,
     articles.topic,
@@ -21,13 +54,19 @@ const getAllArticles = () => {
     articles.article_img_url,
     COALESCE(COUNT(comments.article_id), 0) AS comment_count
     FROM articles
-    LEFT JOIN comments ON articles.article_id = comments.article_id
-    GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC`
-    )
-    .then(({ rows }) => {
-      return rows;
-    });
+    LEFT JOIN comments ON articles.article_id = comments.article_id`;
+
+  if (topic) {
+    queryParams.push(topic);
+    queryStr += ` WHERE articles.topic = $${queryParams.length}`;
+  }
+
+  queryStr += ` GROUP BY articles.article_id
+    ORDER BY ${sort_by} ${order}`;
+
+  return db.query(queryStr, queryParams).then(({ rows }) => {
+    return rows;
+  });
 };
 
 const updateArticleVotes = (article_id, inc_votes) => {

@@ -2,16 +2,20 @@ const express = require("express");
 const app = express();
 const getAllTopics = require("./controllers/topics.controller.js");
 const getApis = require("./controllers/apis.controller.js");
+
 const {
   getArticleByArticleId,
   getArticles,
   changeArticleVotes,
 } = require("./controllers/articles.controller.js");
+
 const {
   postComments,
   getComments,
   deleteComment,
 } = require("./controllers/comments.controller.js");
+
+const getUsers = require("./controllers/users.controller.js");
 
 app.use(express.json());
 
@@ -23,8 +27,9 @@ app.get("/api/articles/:article_id/comments", getComments);
 app.post("/api/articles/:article_id/comments", postComments);
 app.patch("/api/articles/:article_id", changeArticleVotes);
 app.delete("/api/comments/:comment_id", deleteComment);
+app.get("/api/users", getUsers);
 
-app.all("/*", (req, res) => {
+app.all("/*", (req, res, next) => {
   res.status(404).send({ msg: "Page not found" });
 });
 
@@ -38,6 +43,14 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   if (err.code === "23503") {
     res.status(404).send({ msg: "not found" });
+  }
+});
+
+app.use((err, req, res, next) => {
+  if (err.status && err.msg) {
+    res.status(err.status).send({ msg: err.msg });
+  } else {
+    res.status(500).send({ msg: "Internal Server Error" });
   }
 });
 

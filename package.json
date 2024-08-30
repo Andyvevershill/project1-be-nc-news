@@ -7,7 +7,9 @@
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "node ./db/seeds/run-seed.js",
     "test": "jest",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "start": "node listen.js",
+    "seed-prod": "NODE_ENV=production npm run seed"
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,7 @@
     "dotenv": "^16.0.0",
     "express": "^4.19.2",
     "fs": "^0.0.1-security",
+    "jest-sorted": "^1.0.15",
     "nodemon": "^3.1.4",
     "pg": "^8.7.3",
     "promises": "^0.2.5"
