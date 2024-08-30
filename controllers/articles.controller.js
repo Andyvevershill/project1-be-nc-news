@@ -8,12 +8,13 @@ const getArticleByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   getArticle(article_id)
     .then((article) => {
-      if (article.length === 0) {
+      res.status(200).send({ article: article });
+    })
+
+    .catch((err) => {
+      if (err.message === "does not exist") {
         return res.status(404).send({ msg: "Article not found" });
       }
-      res.status(200).send({ article: article[0] });
-    })
-    .catch((err) => {
       next(err);
     });
 };
