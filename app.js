@@ -38,6 +38,11 @@ app.all("/*", (req, res, next) => {
   res.status(404).send({ msg: "Page not found" });
 });
 
+app.all("/route", (req, res) => {
+  // Your patch logic here
+  res.send("Patch request received");
+});
+
 app.use((req, res, next) => {
   if (error.code === "22PO2") {
     res.status(400).send({ msg: "Invalid ID" });

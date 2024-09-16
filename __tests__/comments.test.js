@@ -82,3 +82,46 @@ describe("/api/comments/:comment_id", () => {
       });
   });
 });
+
+describe("/api/comments/:comment_id", () => {
+  it("200 - successfully updates the votes on a comment by the new object value", () => {
+    return request(app)
+      .patch("/api/comments/2")
+      .send({ inc_votes: 1 })
+      .expect(200)
+      .then((res) => {
+        const { comment } = res.body;
+        expect(comment).toHaveProperty("comment_id");
+        expect(comment.votes).toBe(15);
+      });
+  });
+  it("400 - responds with appropriate error when inc_votes is not a number", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({ inc_votes: "one" })
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Invalid input");
+      });
+  });
+
+  it("404 - responds with appropriate error when comment_id does not exist", () => {
+    return request(app)
+      .patch("/api/comments/9999")
+      .send({ inc_votes: 1 })
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Comment not found");
+      });
+  });
+
+  it("400 - responds with appropriate error when inc_votes is missing", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({})
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Invalid input");
+      });
+  });
+});

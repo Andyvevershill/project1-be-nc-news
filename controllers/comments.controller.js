@@ -2,6 +2,7 @@ const {
   getCommentsByArticleId,
   addCommentToArticle,
   deleteCommentByCommentId,
+  updateCommentVotes,
 } = require("../models/comments.model");
 
 const getComments = (req, res, next) => {
@@ -40,12 +41,26 @@ const postComments = (req, res, next) => {
     });
 };
 
+const patchComment = (req, res, next) => {
+  const { comment_id } = req.params;
+  const { inc_votes } = req.body;
+  if (typeof inc_votes !== "number") {
+    return res.status(400).send({ msg: "Invalid input" });
+  }
+  updateCommentVotes(comment_id, inc_votes)
+    .then((comment) => {
+      res.status(200).send({ comment: comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 const deleteComment = (req, res, next) => {
   const { comment_id } = req.params;
 
   deleteCommentByCommentId(comment_id)
     .then((comment) => {
-      console.log(comment);
       if (!comment) {
         return res.status(404).send({ msg: "Comment not found" });
       } else {
@@ -59,4 +74,4 @@ const deleteComment = (req, res, next) => {
     });
 };
 
-module.exports = { getComments, postComments, deleteComment };
+module.exports = { getComments, postComments, deleteComment, patchComment };
